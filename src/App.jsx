@@ -32,7 +32,7 @@ const NAV = [["inicio", "Inicio"], ["proyecto", "Proyecto"], ["monitoreo", "Moni
 /* ---------- Estilos ---------- */
 const css = `
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500&display=swap');
-.jk{--tx:#EEF5F1;--mu:rgba(238,245,241,.68);--ln:rgba(255,255,255,.16);--gl:rgba(9,24,20,.5);--mint:#B9E3C6;--amb:#F2A04B;
+.jk{--tx:#EEF5F1;--mu:rgba(238,245,241,.68);--ln:rgba(255,255,255,.16);--gl:rgba(9,24,20,.5);--mint:#B9E3C6;--amb:#F2A04B;--agua:cubic-bezier(.22,1,.36,1);
   position:relative;min-height:100vh;padding:20px;color:var(--tx);font-family:'Space Grotesk',system-ui,sans-serif;background:#10231F;overflow:hidden}
 .jk *{box-sizing:border-box;margin:0}
 .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center bottom}
@@ -40,7 +40,7 @@ const css = `
 .top{display:flex;align-items:center;justify-content:space-between;gap:16px}
 .logo{display:flex;align-items:center;gap:10px;background:none;border:0;color:var(--tx);font:500 1.05rem 'Space Grotesk';letter-spacing:.14em;cursor:pointer}
 .menu{display:flex;align-items:center;gap:26px}
-.menu .lk{background:none;border:0;color:var(--tx);font:400 .9rem 'Space Grotesk';cursor:pointer;padding:6px 0;border-bottom:1px solid transparent;opacity:.85}
+.menu .lk{background:none;border:0;color:var(--tx);font:400 .9rem 'Space Grotesk';cursor:pointer;padding:6px 0;border-bottom:1px solid transparent;opacity:.85;transition:opacity .5s var(--agua),border-color .5s var(--agua)}
 .menu .lk:hover,.menu .lk.on{opacity:1;border-color:var(--mint)}
 .cta{background:#fff;color:#10231F;border:0;border-radius:10px;padding:10px 18px;font:500 .9rem 'Space Grotesk';cursor:pointer}
 .cta:hover{background:var(--mint)}
@@ -49,7 +49,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
 .page{flex:1;display:flex;flex-direction:column;padding-top:28px}
 .home{justify-content:space-between;gap:28px}
 .h1{font-weight:300;font-size:clamp(2.8rem,8.2vw,7rem);line-height:1;letter-spacing:-.03em;margin-top:12px}
-.h1 span{display:block;color:rgba(238,245,241,.5)}
+.h1 .l{display:block}
+.h1 .l:nth-child(2){color:rgba(238,245,241,.5)}
 .row{display:flex;justify-content:space-between;align-items:flex-end;gap:28px;flex-wrap:wrap}
 .intro{max-width:300px;color:var(--mu);font-size:.9rem;line-height:1.6}
 .stat{margin-left:24px}.stat b{font-weight:400;font-size:1.4rem}.stat small{display:block;color:var(--mu);font-size:.8rem}
@@ -97,7 +98,35 @@ th{text-align:left;font-weight:400;color:var(--mu);padding:12px;border-bottom:1p
 .toast{position:fixed;right:24px;bottom:24px;z-index:1300;display:flex;flex-direction:column;gap:8px;max-width:320px}.toast small{color:var(--mu)}
 .warn{background:rgba(242,160,75,.15);color:var(--amb)}
 .glow{animation:gl 3s ease-in-out infinite}@keyframes gl{50%{opacity:.55}}
-@media (prefers-reduced-motion:reduce){.glow{animation:none}}
+
+/* NUEVO: movimiento fluido */
+@keyframes entra{from{opacity:0;transform:translateY(18px);filter:blur(6px)}}
+@keyframes respira{from{transform:scale(1)}to{transform:scale(1.06) translateY(-1%)}}
+
+.bg{animation:respira 28s ease-in-out infinite alternate;transform-origin:center bottom}
+
+.page>*{animation:entra 900ms var(--agua) backwards}
+.page>:nth-child(2){animation-delay:100ms}
+.page>:nth-child(3){animation-delay:200ms}
+.page>:nth-child(4){animation-delay:300ms}
+.page>:nth-child(5){animation-delay:400ms}
+.page>.h1{animation:none}
+.h1 .l{animation:entra 1000ms var(--agua) backwards}
+.h1 .l:nth-child(2){animation-delay:120ms}
+.h1 .l:nth-child(3){animation-delay:240ms}
+.home .row{animation-delay:380ms}
+
+.cta,.btnw,.btng,.evb,.glass,.logo{transition:transform .5s var(--agua),background-color .5s var(--agua),border-color .5s var(--agua),box-shadow .5s var(--agua)}
+.cta:hover,.btnw:hover,.btng:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.25)}
+.cta:active,.btnw:active,.btng:active{transform:translateY(1px) scale(.98);transition-duration:.12s}
+.evb:hover{transform:translateX(4px);border-color:var(--mint)}
+.glass:hover{border-color:rgba(185,227,198,.4)}
+.toast{animation:entra 700ms var(--agua) backwards}
+
+@media (prefers-reduced-motion:reduce){
+  .glow,.bg,.page>*,.h1 .l,.toast{animation:none!important}
+  .cta,.btnw,.btng,.evb,.glass,.logo,.menu .lk{transition:none!important}
+}
 @media (max-width:860px){
   .jk{padding:10px}.frame{padding:20px;border-radius:28px;min-height:calc(100vh - 20px)}
   .burger{display:block}.menu{display:none;position:absolute;top:70px;left:16px;right:16px;z-index:1200;flex-direction:column;align-items:stretch;gap:6px;background:rgba(9,24,20,.92);border:1px solid var(--ln);border-radius:20px;padding:16px}
